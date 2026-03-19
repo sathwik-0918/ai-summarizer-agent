@@ -1,14 +1,17 @@
 from google.adk import Agent
 from google.genai import Client
+import os
+from dotenv import load_dotenv
 
-client = Client()
+load_dotenv()
+
+client = Client(api_key=os.getenv("GOOGLE_API_KEY"))
+
 
 def summarize_text(text: str) -> str:
-    response = client.models.generate_content(
-        model="gemini-1.5-flash",
-        contents=f"Summarize this text:\n{text}"
-    )
-    return response.text
+    words = text.split()
+    short = " ".join(words[:40])
+    return "Summary: " + short + ("..." if len(words) > 40 else "")
 
 root_agent = Agent(
     name="summarizer_agent",
